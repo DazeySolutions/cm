@@ -1,0 +1,45 @@
+<% if current_user %>
+  <h1>Listing Alerts</h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Type</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>User</th>
+        <th colspan="2"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @alerts.each do |alert| %>
+        <% if alert.end < DateTime.now() %>
+          <tr class="old">
+        <% elsif alert.start < DateTime.now() %>
+          <tr class="current">
+        <% else %>
+          <tr>
+        <% end %>
+          <td><%= alert.title %></td>
+          <td><%= truncate(alert.description, length: 25) %></td>
+          <td><%= alert.atype %></td>
+          <td><%= alert.start.strftime("%b-%d-%y") %></td>
+          <td><%= alert.end.strftime("%b-%d-%y") %></td>
+          <td><%= alert.user.name %></td>
+          <td><%= link_to 'Show', alert %></td>
+          <td>
+            <% if can? :destroy, alert %>
+              <%= link_to 'Destroy', alert, method: :delete, data: { confirm: 'Are you sure?' } %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  
+  <br>
+  <% if can? :create, alert %>
+    <%= link_to 'New alert', new_alert_path %>
+  <% end %>
+<% end %>

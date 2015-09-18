@@ -1,0 +1,74 @@
+<% if current_user %>
+  <h1>Upcoming Sermons</h1>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Image</th>
+          <th>User</th>
+          <th colspan="2"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @sermons.each do |sermon| %>
+          <% if sermon.end < DateTime.now() %>
+            <tr class="old">
+          <% elsif sermon.start < DateTime.now() %>
+            <tr class="current">
+          <% else %>
+            <tr>
+          <% end %>
+            <td><%= sermon.title %></td>
+            <td><%= truncate(sermon.description, length: 25)%></td>
+            <td><%= sermon.start.strftime("%b-%d-%y") %></td>
+            <td><%= sermon.end.strftime("%b-%d-%y") %></td>
+            <td><%= image_tag(sermon.image.url(:small)) %></td>
+            <td><%= sermon.user.name %></td>
+            <td><%= link_to 'Show', sermon %></td>
+            <td>
+                <% if can? :destroy, sermon %>
+                    <%= link_to 'Destroy', sermon, method: :delete, data: { confirm: 'Are you sure?' } %>
+                <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <br>
+    <% if can? :create, Sermon %>
+        <%= link_to 'New Sermon', new_sermon_path %>
+    <% end %>
+<% else %>
+  <h1> Upcoming Sermons </h1>
+  <div class="row">
+    <% @sermons.each do |sermon| %>
+    <div class="col-xs-10 col-xs-offset-1 col-md-offset-0 col-md-4">
+      <div class="well" style="padding: 0px;">
+        <div class="start text-center">
+          <p class="num"><%= sermon.start.strftime("%d") %></p>
+          <p class="month"><%= sermon.start.strftime("%b") %></p>
+        </div>
+        <div>
+          <%= image_tag sermon.image.url(), :style=>'width:100%;' %>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="col-xs-12">
+              <h4 class="col-xs-12"><%= sermon.title %></h4>
+              <p class="col-xs-12">
+                  <%= sermon.description %>
+                  <br />
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% end %>
+  </div>
+
+<% end %>

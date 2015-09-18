@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @sermon.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @sermon.description %>
+</p>
+
+<p>
+  <strong>Start:</strong>
+  <%= @sermon.start %>
+</p>
+
+<p>
+  <strong>End:</strong>
+  <%= @sermon.end %>
+</p>
+
+<p>
+  <strong>Image:</strong>
+  <%= @sermon.image %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @sermon.user %>
+</p>
+
+<%= link_to 'Edit', edit_sermon_path(@sermon) %> |
+<%= link_to 'Back', sermons_path %>

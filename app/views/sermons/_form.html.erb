@@ -1,0 +1,96 @@
+<%= form_for(@sermon) do |f| %>
+   <% if @sermon.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@sermon.errors.count, "error") %> prohibited this event from being saved:</h2>
+
+      <ul>
+      <% @sermon.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :title %><br>
+    <%= f.text_field :title, class: 'form-control'%>
+  </div>
+  <div class="form-group">
+    <%= f.label :description %><br>
+    <%= f.text_area :description, class: 'form-control'%>
+  </div>
+  <div class="form-group">
+    <%= f.label :start %><br>
+    <div class="input-group">
+      <%= f.text_field :start, 'data-behaviour' => 'datepickerstart', class: 'form-control' %>
+      <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :end %><br>
+    <div class="input-group">
+      <%= f.text_field :end, 'data-behaviour' => 'datepickerend', class: 'form-control' %>
+      <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :image %><br>
+    <span class="btn btn-primary btn-file">
+      Browse...<%= f.file_field :image %>
+    </span> 
+  </div>
+  <div class="well preview text-center">
+    <img>
+  </div>
+  <div class="actions">
+    <%= link_to 'Back', sermons_path, :class=>'btn btn-warning col-xs-5 col-sm-2' %>
+    <span class="col-xs-2 col-sm-1"></span>
+    <%= f.submit class: 'submit_sermon btn btn-success col-xs-5 col-sm-2' %>
+  </div>
+  <%end %>
+
+
+
+<script type="text/javascript">
+  function readURL(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('.preview img').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+  $(document).ready(function(){
+    $("input[type=file]").change(function(){
+      readURL(this);
+    });
+    $(".submit_sermon").click(function(e){
+      e.preventDefault();
+      var d = new Date($("#sermon_start")[0].value);
+      $("#sermon_start")[0].value = d.toJSON();
+      var d = new Date($("#sermon_end")[0].value);
+      $("#sermon_end")[0].value = d.toJSON();
+      $("form").submit();
+    });
+  });
+$("[data-behaviour~=datepickerstart]").datetimepicker({
+        format: "MM-dd-yyyy HH:ii P",
+        autoclose: true,
+        todayBtn: true,
+        startDate: new Date(),
+        minuteStep: 5,
+	showMeridian: true
+    });
+$("[data-behaviour~=datepickerend]").datetimepicker({
+        format: "MM-dd-yyyy HH:ii P",
+        autoclose: true,
+        todayBtn: true,
+        startDate: new Date($('#sermon_start')[0].value),
+        minuteStep: 5,
+	showMeridian: true
+    });
+
+
+</script> 
